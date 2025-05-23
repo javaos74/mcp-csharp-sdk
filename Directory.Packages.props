@@ -73,5 +73,8 @@
     <PackageVersion Include="xunit.v3" Version="2.0.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
+    <PackageVersion Include="DotNetEnv" Version="3.1.1" />
+    <PackageVersion Include="PTST.UiPath.Orchestrator.API" Version="0.0.2-alpha" />
+    <PackageVersion Include="uipath.robot.api" Version="23.12.0-alpha.15125" />
   </ItemGroup>
 </Project>
