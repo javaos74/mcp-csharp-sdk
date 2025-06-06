@@ -34,7 +34,6 @@ public class Program
             Resources = new(),
             Prompts = new(),
         };
-        options.ProtocolVersion = "2024-11-05";
         options.ServerInstructions = "This is a test server with only stub functionality";
 
         Console.WriteLine("Registering handlers.");
@@ -43,7 +42,7 @@ public class Program
         static CreateMessageRequestParams CreateRequestSamplingParams(string context, string uri, int maxTokens = 100)
         {
             return new CreateMessageRequestParams()
-            { 
+            {
                 Messages = [new SamplingMessage()
                 {
                     Role = Role.User,
@@ -53,10 +52,10 @@ public class Program
                         Text = $"Resource {uri} context: {context}"
                     }
                 }],
-                SystemPrompt = "You are a helpful test server.", 
-                MaxTokens = maxTokens, 
-                Temperature = 0.7f, 
-                IncludeContext = ContextInclusion.ThisServer 
+                SystemPrompt = "You are a helpful test server.",
+                MaxTokens = maxTokens,
+                Temperature = 0.7f,
+                IncludeContext = ContextInclusion.ThisServer
             };
         }
         #endregion
@@ -109,9 +108,9 @@ public class Program
                 {
                     return new ListToolsResult()
                     {
-                        Tools = 
+                        Tools =
                         [
-                            new Tool()                
+                            new Tool()
                             {
                                 Name = "echo",
                                 Description = "Echoes the input back to the client.",
@@ -171,13 +170,13 @@ public class Program
                     }
                     else if (request.Params.Name == "sampleLLM")
                     {
-                        if (request.Params.Arguments is null || 
-                            !request.Params.Arguments.TryGetValue("prompt", out var prompt) || 
+                        if (request.Params.Arguments is null ||
+                            !request.Params.Arguments.TryGetValue("prompt", out var prompt) ||
                             !request.Params.Arguments.TryGetValue("maxTokens", out var maxTokens))
                         {
                             throw new McpException("Missing required arguments 'prompt' and 'maxTokens'", McpErrorCode.InvalidParams);
                         }
-                        var sampleResult = await request.Server.RequestSamplingAsync(CreateRequestSamplingParams(prompt.ToString(), "sampleLLM", Convert.ToInt32(maxTokens.ToString())),
+                        var sampleResult = await request.Server.SampleAsync(CreateRequestSamplingParams(prompt.ToString(), "sampleLLM", Convert.ToInt32(maxTokens.ToString())),
                             cancellationToken);
 
                         return new CallToolResponse()
@@ -224,10 +223,10 @@ public class Program
                             throw new McpException($"Invalid cursor: '{requestParams.Cursor}'", e, McpErrorCode.InvalidParams);
                         }
                     }
-                    
+
                     int endIndex = Math.Min(startIndex + pageSize, resources.Count);
                     string? nextCursor = null;
-                    
+
                     if (endIndex < resources.Count)
                     {
                         nextCursor = Convert.ToBase64String(Encoding.UTF8.GetBytes(endIndex.ToString()));
@@ -267,9 +266,9 @@ public class Program
                         };
                     }
 
-                    ResourceContents? contents = resourceContents.FirstOrDefault(r => r.Uri == request.Params.Uri) ?? 
+                    ResourceContents? contents = resourceContents.FirstOrDefault(r => r.Uri == request.Params.Uri) ??
                         throw new McpException($"Resource not found: '{request.Params.Uri}'", McpErrorCode.InvalidParams);
-                    
+
                     return new ReadResourceResult()
                     {
                         Contents = [contents]

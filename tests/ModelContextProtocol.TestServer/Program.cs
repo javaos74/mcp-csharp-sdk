@@ -46,7 +46,6 @@ internal static class Program
                 Logging = ConfigureLogging(),
                 Completions = ConfigureCompletions(),
             },
-            ProtocolVersion = "2024-11-05",
             ServerInstructions = "This is a test server with only stub functionality",
         };
 
@@ -179,7 +178,7 @@ internal static class Program
                     {
                         throw new McpException("Missing required arguments 'prompt' and 'maxTokens'", McpErrorCode.InvalidParams);
                     }
-                    var sampleResult = await request.Server.RequestSamplingAsync(CreateRequestSamplingParams(prompt.ToString(), "sampleLLM", Convert.ToInt32(maxTokens.GetRawText())),
+                    var sampleResult = await request.Server.SampleAsync(CreateRequestSamplingParams(prompt.ToString(), "sampleLLM", Convert.ToInt32(maxTokens.GetRawText())),
                         cancellationToken);
 
                     return new CallToolResponse()
